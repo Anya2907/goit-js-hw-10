@@ -14,71 +14,13 @@ const refs = {
 }
 
 let intervalId;
-
-// refs.bntElem.disabled = true;
-    // const inputVal = refs.input.value;
-    // const initTime = new Date(inputVal);
-    // const date = Date.now()
-    // console.log(initTime >= date);
-    // if (initTime > date) {
-    //     refs.bntElem.disabled = false;
-    // }
-
-
-refs.bntElem.addEventListener('click', () => { 
-    
-    const inputVal = refs.input.value;
-    const initTime = new Date(inputVal);
-    const date = Date.now()
-    // console.log(initTime < date);
-    if (initTime > date) {
-        refs.bntElem.disabled = false;
-    }
-    
-    intervalId = setInterval(() => {
-        const currentTime = Date.now();
-        const diff = initTime - currentTime;
-        const time = convertMs(diff);
-        const str = getTime(time);
-        // console.log(diff);
-
-    }, 1000);
-
-    setTimeout(() => {
-        clearInterval(intervalId);
-    }, initTime - Date.now())
-})
-
-function convertMs(ms) {
-  let d, h, m, s;
-  s = Math.floor(ms / 1000);
-  m = Math.floor(s / 60);
-  s = s % 60;
-  h = Math.floor(m / 60);
-  m = m % 60;
-  d = Math.floor(h / 24);
-  h = h % 24;
-  return { d: d, h: h, m: m, s: s };
-}
-
-function getTime({d, h, m, s }) {
-  d = d.toString().padStart(2, '0');  
-  h = h.toString().padStart(2, '0');
-  m = m.toString().padStart(2, '0');
-  s = s.toString().padStart(2, '0');
-
-    //   return `${d} ${h}:${m}:${s}`;
-        refs.days.textContent = d;
-        refs.hours.textContent = h;
-        refs.minutes.textContent = m;
-        refs.seconds.textContent = s;
-}
 refs.bntElem.disabled = true;
 
 const options = {
     defaultDate: new Date(),
     enableTime: true,
     time_24hr: true,
+    minuteIncrement: 1,
     onClose(selectedDates) {        
         if (selectedDates[0] <= options.defaultDate) {
             refs.bntElem.disabled = true;
@@ -97,6 +39,81 @@ const options = {
 }
 
 flatpickr("#datetime-picker", options);
+
+function convertMs(ms) {
+  // Number of milliseconds per unit of time
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  // Remaining days
+  const days = Math.floor(ms / day);
+  // Remaining hours
+  const hours = Math.floor((ms % day) / hour);
+  // Remaining minutes
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  // Remaining seconds
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+// function convertMs(ms) {
+//     let d, h, m, s;
+//     s = Math.floor(ms / 1000);
+//     m = Math.floor(s / 60);
+//     s = s % 60;
+//     h = Math.floor(m / 60);
+//     m = m % 60;
+//     d = Math.floor(h / 24);
+//     h = h % 24;
+
+//     return { d: d, h: h, m: m, s: s };
+// }
+
+function getTime({days, hours, minutes, seconds }) {
+    days = days.toString().padStart(2, '0');  
+    hours = hours.toString().padStart(2, '0');
+    minutes = minutes.toString().padStart(2, '0');
+    seconds = seconds.toString().padStart(2, '0');
+        
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.minutes.textContent = minutes;
+    refs.seconds.textContent = seconds;
+}
+
+refs.bntElem.addEventListener('click', () => {    
+    const inputVal = refs.input.value;
+    const initTime = new Date(inputVal);
+    const date = Date.now()
+    
+    if (initTime > date) {
+        refs.bntElem.disabled = false;
+    }
+    
+    intervalId = setInterval(() => {
+        const currentTime = Date.now();
+        const diff = initTime - currentTime;
+        const time = convertMs(diff);
+        getTime(time);
+        refs.bntElem.disabled = true;
+        refs.input.disabled = true;
+    }, 1000);
+
+    setTimeout(() => {
+        clearInterval(intervalId);
+        refs.input.disabled = false;
+    }, initTime - Date.now())
+})
+
+
+
+
+
+
+
 
 
 
