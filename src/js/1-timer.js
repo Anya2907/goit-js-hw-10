@@ -40,8 +40,7 @@ const options = {
 
 flatpickr("#datetime-picker", options);
 
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
+function convertMs(ms) {  
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
@@ -58,19 +57,6 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
-
-// function convertMs(ms) {
-//     let d, h, m, s;
-//     s = Math.floor(ms / 1000);
-//     m = Math.floor(s / 60);
-//     s = s % 60;
-//     h = Math.floor(m / 60);
-//     m = m % 60;
-//     d = Math.floor(h / 24);
-//     h = h % 24;
-
-//     return { d: d, h: h, m: m, s: s };
-// }
 
 function getTime({days, hours, minutes, seconds }) {
     days = days.toString().padStart(2, '0');  
