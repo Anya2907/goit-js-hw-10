@@ -29,8 +29,7 @@ const options = {
                 theme: 'dark',
                 position: 'topRight',                
                 color: '#EF4040',
-                iconUrl: '../img/close.png',               
-                
+                iconUrl: '../img/close.png',             
             });
         } else {
             refs.bntElem.disabled = false;
@@ -86,13 +85,16 @@ refs.bntElem.addEventListener('click', () => {
         getTime(time);
         refs.bntElem.disabled = true;
         refs.input.disabled = true;
-    }, 1000);
 
-    setTimeout(() => {
+        if (refs.minutes.textContent <= 0 && refs.seconds.textContent <= 0) {
         clearInterval(intervalId);
         refs.input.disabled = false;
-    }, initTime - Date.now())
+    }
+
+    }, 1000);
 })
+
+
 
 
 
